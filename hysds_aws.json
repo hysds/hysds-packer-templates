@@ -8,9 +8,7 @@
     "ami_name":        null,
     "source_ami":      null,
     "instance_type":   "c5.large",
-    "vpc_id":  null,
     "subnet_id":  null,
-    "security_group":  null,
     "volume_size":     "20",
     "hysds_component": null
   },
@@ -24,9 +22,7 @@
       "source_ami": "{{ user `source_ami` }}",
       "region": "{{ user `region` }}",
       "instance_type": "{{ user `instance_type` }}",
-      "vpc_id": "{{ user `vpc_id` }}",
       "subnet_id": "{{ user `subnet_id` }}",
-      "ssh_private_ip": true,
       "encrypt_boot": true,
       "ami_name": "{{ user `ami_name` }}",
       "ami_block_device_mappings": [
@@ -52,6 +48,7 @@
   "provisioners": [
     {
       "type": "shell",
+      "expect_disconnect": true,
       "inline": [
         "sudo sed -i 's/^SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config",
         "sudo yum -y update",
@@ -64,6 +61,7 @@
     },
     {
       "type": "shell",
+      "expect_disconnect": true,
       "pause_before": "60s",
       "execute_command": "chmod +x {{ .Path }}; {{ .Vars }} sudo -E sh '{{ .Path }}'",
       "inline": [
@@ -77,6 +75,7 @@
     },
     {
       "type": "shell",
+      "expect_disconnect": true,
       "pause_before": "60s",
       "execute_command": "chmod +x {{ .Path }}; {{ .Vars }} sudo -u ops -E sh '{{ .Path }}'",
       "inline": [

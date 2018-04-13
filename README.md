@@ -10,7 +10,7 @@ Packer templates for HySDS.
   aws configure
   ```
 1. Using your AWS account, retrive the following information:
-  - CentOS7 source AMI
+  - CentOS7 source AMI (you may pick AMI ID for your region at https://wiki.centos.org/Cloud/AWS but they may be outdated)
   - Subnet ID (to use for building the images)
 1. Run the build script:
   ```

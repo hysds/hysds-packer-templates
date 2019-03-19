@@ -23,7 +23,7 @@
       "region": "{{ user `region` }}",
       "instance_type": "{{ user `instance_type` }}",
       "subnet_id": "{{ user `subnet_id` }}",
-      "encrypt_boot": true,
+      "encrypt_boot": false,
       "ami_name": "{{ user `ami_name` }}",
       "ami_block_device_mappings": [
         {
@@ -31,7 +31,7 @@
           "volume_type": "gp2",
           "volume_size": "{{ user `volume_size` }}",
           "delete_on_termination": true,
-          "encrypted": true
+          "encrypted": false
         }
       ],
       "launch_block_device_mappings": [

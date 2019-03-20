@@ -66,7 +66,7 @@
       "execute_command": "chmod +x {{ .Path }}; {{ .Vars }} sudo -E sh '{{ .Path }}'",
       "inline": [
         "cd /tmp",
-        "curl -skLO https://raw.githubusercontent.com/hysds/puppet-{{ user `hysds_component` }}/python3/install.sh",
+        "curl -skLO https://raw.githubusercontent.com/hysds/puppet-{{ user `hysds_component` }}/python2/install.sh",
         "chmod 755 /tmp/install.sh",
         "./install.sh",
         "reboot",

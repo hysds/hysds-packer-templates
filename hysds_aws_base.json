@@ -1,0 +1,75 @@
+{
+  "variables": {
+    "myusername":      "{{ env `OS_USERNAME` }}",
+    "mypassword":      "{{ env `OS_PASSWORD` }}",
+    "access_key":      null,
+    "secret_key":      null,
+    "region":          null,
+    "ami_name":        null,
+    "source_ami":      null,
+    "instance_type":   "c5.large",
+    "subnet_id":  null,
+    "volume_size":     "20",
+    "hysds_component": null
+  },
+  "builders": [
+    {
+      "name": "hysds-aws",
+      "type": "amazon-ebs",
+      "ssh_username": "centos",
+      "access_key": "{{ user `access_key` }}",
+      "secret_key": "{{ user `secret_key` }}",
+      "source_ami": "{{ user `source_ami` }}",
+      "region": "{{ user `region` }}",
+      "instance_type": "{{ user `instance_type` }}",
+      "subnet_id": "{{ user `subnet_id` }}",
+      "encrypt_boot": false,
+      "ami_name": "{{ user `ami_name` }}",
+      "ami_block_device_mappings": [
+        {
+          "device_name": "/dev/sda1",
+          "volume_type": "gp2",
+          "volume_size": "{{ user `volume_size` }}",
+          "delete_on_termination": true,
+          "encrypted": false
+        }
+      ],
+      "launch_block_device_mappings": [
+        {
+          "device_name": "/dev/sda1",
+          "volume_type": "gp2",
+          "volume_size": "{{ user `volume_size` }}",
+          "delete_on_termination": true
+        }
+      ],
+      "ssh_pty": true
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "expect_disconnect": true,
+      "inline": [
+        "sudo sed -i 's/^SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config",
+        "sudo yum -y update",
+        "sudo yum install -y epel-release",
+        "sudo yum -y update",
+        "sudo yum -y install puppet puppet-firewalld nscd ntp wget curl subversion git vim screen",
+        "sudo reboot",
+        "sudo sleep 60"
+      ]
+    },
+    {
+      "type": "shell",
+      "expect_disconnect": true,
+      "pause_before": "60s",
+      "execute_command": "chmod +x {{ .Path }}; {{ .Vars }} sudo -E sh '{{ .Path }}'",
+      "inline": [
+        "cd /tmp",
+        "curl -skLO https://raw.githubusercontent.com/hysds/puppet-{{ user `hysds_component` }}/master/install.sh",
+        "chmod 755 /tmp/install.sh",
+        "./install.sh hysds master"
+      ]
+    }
+  ]
+}

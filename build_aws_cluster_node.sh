@@ -6,7 +6,7 @@ DATE=$(date '+%Y%m%d')
 source_ami=$1
 subnet_id=$2
 
-for i in `echo hysds_base`; do
+for i in `echo hysds_cluster_node`; do
   packer build -var "access_key=$(grep aws_access_key_id $HOME/.aws/credentials | head -1 | awk '{print $3}')" \
                -var "secret_key=$(grep aws_secret_access_key $HOME/.aws/credentials | head -1 | awk '{print $3}')" \
                -var "region=$(grep region $HOME/.aws/config | head -1 | awk '{print $3}')" \
@@ -15,5 +15,5 @@ for i in `echo hysds_base`; do
                -var "volume_size=30" \
                -var "subnet_id=${subnet_id}" \
                -var "hysds_component=${i}" \
-               hysds_aws_base.json
+               hysds_aws_cluster_node.json
 done

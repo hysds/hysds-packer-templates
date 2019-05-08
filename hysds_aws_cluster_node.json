@@ -70,16 +70,6 @@
         "chmod 755 /tmp/install.sh",
         "./install.sh hysds master"
       ]
-    },
-    {
-      "type": "shell",
-      "expect_disconnect": true,
-      "pause_before": "60s",
-      "execute_command": "chmod +x {{ .Path }}; {{ .Vars }} sudo -u ops -E sh '{{ .Path }}'",
-      "inline": [
-        "cd /home/ops",
-        "./install_hysds.sh"
-      ]
     }
   ]
 }
